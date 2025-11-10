@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2025-11-10
+
+### Added
+- Interactive mixing workflow with decision points at each transition
+- `InteractiveMixer` class presenting transition options based on track analysis
+- BPM/key compatibility detection for smooth mixing
+- Energy flow analysis (building/maintaining/descending)
+- Multiple transition styles: beatmatch, crossfade, hard cut, experimental
+- Custom transition support for artistic control
+- Session logging to JSON for review and learning
+- Test script demonstrating 3-track interactive workflow
+
 ## [0.1.0] - 2025-11-10
 
 ### Added
