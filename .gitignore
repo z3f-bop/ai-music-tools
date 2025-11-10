@@ -42,3 +42,17 @@ share/python-wheels/
 .vscode/
 *.swp # For Vim users
 .env
+
+# Virtual environment
+venv/
+env/
+
+# Test outputs and generated files
+temp/
+exports/
+sessions/
+
+# Generated audio and analysis files
+*.mp3
+*.wav
+*.npy
