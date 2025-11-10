@@ -1,11 +1,12 @@
-openai
+# Core audio processing
 pydub
 librosa
-requests
-python-dotenv
 mutagen
 numpy
 scipy
+
+# Utilities
+python-dotenv
+
+# Optional: visualization
 matplotlib
-aiohttp
-asyncio-mqtt
