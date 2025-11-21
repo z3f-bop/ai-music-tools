@@ -234,6 +234,77 @@ python3 dj_tools.py
 - **Learning is the goal** - Not automation, not perfection
 - **This is education** - Building understanding through practice
 
+## Stem Extraction Workflow
+
+### Using VirtualDJ + ffmpeg
+
+**Step 1: Generate .vdjstems file**
+1. Open track in VirtualDJ
+2. Load onto deck
+3. VirtualDJ automatically generates `.vdjstems` file (cached)
+4. File location: VirtualDJ cache directory
+
+**.vdjstems format:** MP4 container with 5 audio streams
+- Stream 0: Vocals
+- Stream 1: Hi-hats
+- Stream 2: Bass
+- Stream 3: Melody
+- Stream 4: Drums
+
+**Step 2: Extract stems with Python**
+
+```python
+from dj_tools import DJToolkit
+
+dj = DJToolkit()
+
+# Extract all stems
+stems = dj.extract_stems('path/to/track.vdjstems')
+# Returns: {
+#   'vocals': 'path/track_vocals.flac',
+#   'hihat': 'path/track_hihat.flac',
+#   'bass': 'path/track_bass.flac',
+#   'melody': 'path/track_melody.flac',
+#   'drums': 'path/track_drums.flac'
+# }
+
+# Or extract single stem
+bass_file = dj.extract_single_stem(
+    'path/to/track.vdjstems',
+    'bass'
+)
+```
+
+**Step 3: Analyze stems individually**
+
+```python
+# Analyze each stem to understand layer contributions
+from dj_tools import DJToolkit
+
+dj = DJToolkit()
+
+# Extract stems
+stems = dj.extract_stems('music/house_musette.vdjstems')
+
+# Analyze full track
+full_analysis = dj.analyze_tracks(['music/house_musette.m4a'])
+
+# Analyze each stem
+stem_analyses = {}
+for stem_name, stem_path in stems.items():
+    analysis = dj.analyze_tracks([stem_path])
+    stem_analyses[stem_name] = analysis['analyses'][0]
+
+# Compare: How does bass contribute to overall tempo/key/energy?
+print(f"Full track BPM: {full_analysis['analyses'][0]['tempo']}")
+print(f"Bass stem BPM: {stem_analyses['bass']['tempo']}")
+```
+
+**CLI tool:**
+```bash
+python tools/stem_extraction.py track.vdjstems ./output/
+```
+
 ## Code Comments
 
 You may encounter comments with unconventional energy:
