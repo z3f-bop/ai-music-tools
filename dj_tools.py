@@ -14,6 +14,7 @@ from tools.final_export import final_mix_export_tool, create_mix_package_tool
 from tools.beat_spectrogram import beat_spectrogram_tool
 from tools.deck_monitor_viz import create_deck_monitor_visualization
 from tools.stem_extraction import StemExtractor
+from tools.audio_to_midi import AudioToMIDI
 from config import Config
 
 
@@ -26,6 +27,7 @@ class DJToolkit:
     def __init__(self):
         Config.ensure_directories()
         self.stem_extractor = StemExtractor()
+        self.audio_to_midi = AudioToMIDI()
 
     def analyze_tracks(self, file_paths: List[str]) -> Dict:
         """
@@ -224,6 +226,43 @@ class DJToolkit:
             stem_name,
             output_path
         )
+
+    def convert_to_midi(
+        self,
+        audio_path: str,
+        output_dir: Optional[str] = None
+    ) -> dict:
+        """
+        Convert audio file to MIDI using Basic-Pitch.
+
+        Args:
+            audio_path: Path to audio file (full track or stem)
+            output_dir: Output directory (default: same as input)
+
+        Returns:
+            Dict with paths to generated files
+            {'midi': 'path/file.mid', 'notes': 'path/file.csv', ...}
+        """
+        return self.audio_to_midi.convert(audio_path, output_dir)
+
+    def stem_to_midi(
+        self,
+        stem_path: str,
+        stem_name: str,
+        output_dir: Optional[str] = None
+    ) -> str:
+        """
+        Convert a stem to MIDI with appropriate naming.
+
+        Args:
+            stem_path: Path to stem audio file
+            stem_name: Name of stem (bass, melody, etc.)
+            output_dir: Output directory
+
+        Returns:
+            Path to MIDI file
+        """
+        return self.audio_to_midi.convert_stem(stem_path, stem_name, output_dir)
 
 
 # Convenience functions for Claude Code tool integration
