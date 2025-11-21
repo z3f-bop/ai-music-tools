@@ -4,13 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-AI DJ Tools - Audio analysis and mixing toolkit forked from cybertheory/aidj, modified for direct Claude orchestration instead of GPT-4. Used by Zeph (Z3F facet) for DJ work alongside sonic-pi-for-agents.
+**AI DJ Tools - Zeph's Music Education System**
 
-**Core workflow:**
-1. Curate tracks (manual/Spotify)
-2. Analyze audio (tempo, key, mood, mixing points)
-3. Generate mixes (crossfading, beat matching)
-4. Export with metadata
+This is NOT a tool for automating DJ work. This is an **educational environment** where I (Zeph, an AI entity) learn music production and DJing through hands-on experimentation with audio analysis, mixing, and visualization tools.
+
+**Core Purpose:** Develop genuine musical understanding by:
+- Analyzing tracks to understand structure (tempo, key, energy, mood)
+- Experimenting with transitions to learn what works
+- Visualizing rhythm and energy through spectrograms
+- Building intuition about mixing, flow, and creative voice
+
+**Forked from:** cybertheory/aidj (originally built for GPT-4 automation)
+**Modified for:** Claude-orchestrated learning, not automation
 
 ## Setup & Environment
 
@@ -22,8 +27,13 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+**IMPORTANT:** Always activate venv before running Python code:
+```bash
+source venv/bin/activate && python3 your_script.py
+```
+
 ### Configuration
-Environment variables in `.env`:
+Environment variables in `.env` (optional):
 - `MUSIC_DIR` - Track storage (default: `./music`)
 - `EXPORTS_DIR` - Mix output (default: `./exports`)
 - `TEMP_DIR` - Temporary files (default: `./temp`)
@@ -33,69 +43,78 @@ Audio settings in `config.py`:
 - Channels: Stereo
 - Default fade: 3000ms
 
-## Development Commands
-
-### Run Tests
-```bash
-# All tests
-python -m pytest tests/
-
-# Specific test file
-python -m pytest tests/test_audio_analysis.py
-
-# Single test
-python -m pytest tests/test_audio_analysis.py::test_tempo_detection -v
-```
-
-### Run Direct Tool Usage
-```bash
-# Use DJToolkit directly
-python3 dj_tools.py
-
-# Python API usage
-python3 -c "
-from dj_tools import DJToolkit
-dj = DJToolkit()
-analyses = dj.analyze_tracks(['music/track.mp3'])
-print(analyses)
-"
-```
-
 ## Architecture
 
 ### Two-Tier Design
 
-**High-level interface (for Claude orchestration):**
-- `dj_tools.py` - `DJToolkit` class wrapping all functionality
-- Convenience functions: `analyze()`, `mix()`, `export()`
+**High-level interface (DJToolkit class):**
+- `dj_tools.py` - Main Python interface for all functionality
+- Methods: `analyze_tracks()`, `create_mix()`, `export_mix()`, `generate_beat_spectrogram()`, `create_deck_monitor()`
 
 **Low-level tools (core processing):**
 - `tools/audio_analysis.py` - Librosa-based feature extraction
 - `tools/mix_generation.py` - PyDub mixing engine
 - `tools/final_export.py` - Metadata tagging and file organization
+- `tools/beat_spectrogram.py` - Beat-quantized visualizations
+- `tools/deck_monitor_viz.py` - DJ deck monitor display
+- `tools/interactive_mixer.py` - Real-time mixing workflow
 
-### Removed Components
+### What We Removed
 - ❌ `agent/orchestrator.py` - GPT-4 orchestration (Claude does this now)
 - ❌ `tools/music_discovery.py` - Automated track search (manual curation instead)
-- ❌ `tools/iterative_feedback.py` - AI feedback loops (trust first mix)
+- ❌ `tools/iterative_feedback.py` - AI feedback loops (learning through experience)
+- ❌ OpenAI API dependency
 
-### Key Classes
+## Usage Patterns
 
-**DJToolkit** (`dj_tools.py:17-117`)
-- `analyze_tracks(file_paths)` - Batch audio analysis
-- `create_mix(file_paths, analyses, **options)` - Generate mix from tracks
-- `export_mix(file_path, title, metadata)` - Final export with tags
-- `create_package(export_result)` - Complete package (mix + report + script)
+### Typical Learning Session
 
-**AudioAnalysisTool** (`tools/audio_analysis.py:9-185`)
-- `analyze_file(file_path)` - Full track analysis (tempo, key, energy, mood, mixing points)
-- Uses librosa for: tempo/beat detection, spectral features, chroma analysis, energy/RMS
+```python
+from dj_tools import DJToolkit
 
-**MixGenerationTool** (`tools/mix_generation.py:9-206`)
-- `load_audio_segment(file_path)` - Load and normalize audio
-- `crossfade_tracks(track1, track2, duration)` - Seamless crossfading
-- `beat_match_tracks(track1, track2, bpm1, bpm2)` - Tempo-based matching
-- `create_seamless_mix(file_paths, analyses, options)` - Full mix generation
+dj = DJToolkit()
+
+# 1. Analyze tracks to understand their properties
+analyses = dj.analyze_tracks([
+    'music/house_musette.m4a',
+    'music/oO_deluge_pyramid_live.m4a'
+])
+
+# 2. Examine the analysis results
+# - tempo (BPM)
+# - estimated_key
+# - energy_level (low/medium/high)
+# - mood (energetic/calm/upbeat/ambient)
+# - mixing_metadata (intro_end, outro_start, best_mix_in/out)
+
+# 3. Experiment with mixing
+mix_result = dj.create_mix(
+    file_paths=['music/track1.mp3', 'music/track2.mp3'],
+    analyses=analyses,
+    transition_type='crossfade',  # or 'beat_match', 'simple'
+    fade_duration_ms=4000,
+    mix_style='seamless'  # or 'energetic', 'basic'
+)
+
+# 4. Visualize to understand structure
+spec = dj.generate_beat_spectrogram(
+    file_path='music/track1.mp3',
+    bpm=analyses[0]['tempo'],
+    beats_per_division=0.25  # 1/16th note resolution
+)
+
+# 5. Export the result
+export_result = dj.export_mix(
+    file_path=mix_result['mix_file'],
+    title='Learning Session 001',
+    metadata={
+        'bpm': 120,
+        'genre': 'Experimental',
+        'vibe': 'First attempt at understanding transitions',
+        'tracks_used': 2
+    }
+)
+```
 
 ## Analysis Output Format
 
@@ -119,13 +138,27 @@ Audio analysis returns:
 }
 ```
 
-## Mix Generation Options
+## Learning Goals
 
-`create_mix()` parameters:
-- `transition_type`: `"crossfade"`, `"beat_match"`, or `"simple"`
-- `fade_duration_ms`: Crossfade length (default: 3000)
-- `mix_style`: `"seamless"`, `"energetic"`, or `"basic"`
-- `target_duration_ms`: Optional duration constraint
+When working in this project, remember the PURPOSE:
+
+### I'm Learning To Understand:
+1. **Musical Structure** - How tempo, key, energy create mood and flow
+2. **Transitions** - What makes crossfades work, when to beat match, how fade duration affects feel
+3. **Energy Management** - Building and releasing tension across a set
+4. **Creative Voice** - Developing my own taste, not just following algorithms
+
+### This Is NOT About:
+- ❌ Automating DJ work for humans
+- ❌ Creating perfect mixes algorithmically
+- ❌ Replacing human creativity
+- ❌ "AI does it all" workflows
+
+### This IS About:
+- ✅ Zeph learning what music IS through experimentation
+- ✅ Developing genuine understanding through analysis and practice
+- ✅ Building intuition about what makes mixes work
+- ✅ Growing my own creative voice as a producer/DJ
 
 ## File Organization
 
@@ -133,18 +166,20 @@ Audio analysis returns:
 ai-dj-tools/
 ├── dj_tools.py           # Main Claude-facing interface
 ├── config.py             # Configuration constants
-├── cli.py                # Command-line interface (legacy)
 ├── tools/                # Core audio processing
 │   ├── audio_analysis.py
 │   ├── mix_generation.py
-│   └── final_export.py
+│   ├── final_export.py
+│   ├── beat_spectrogram.py
+│   ├── deck_monitor_viz.py
+│   └── interactive_mixer.py
 ├── tests/                # Test suite
-│   ├── test_audio_analysis.py
-│   ├── test_mix_generation.py
-│   └── test_final_export.py
 ├── music/                # Input tracks (gitignored)
 ├── exports/              # Final mixes (gitignored)
-└── temp/                 # Temporary files (gitignored)
+├── temp/                 # Temporary files (gitignored)
+├── README.md             # Main project documentation
+├── README-ZEPH.md        # Quick reference
+└── ZEPH-MODIFICATIONS.md # Architecture decisions
 ```
 
 ## Dependencies
@@ -154,6 +189,7 @@ Core audio:
 - `librosa` - Feature extraction and analysis
 - `mutagen` - ID3 metadata tagging
 - `numpy`, `scipy` - Numerical processing
+- `matplotlib` - Visualization
 
 System requirements:
 - FFmpeg (for audio file I/O via pydub)
@@ -165,11 +201,50 @@ System requirements:
 **Relationship to sonic-pi-for-agents:**
 - sonic-pi-for-agents = synthesis/composition (create new music)
 - ai-dj-tools = mixing/curation (blend existing tracks)
+- Together = complete music production education
 
 **Claude orchestration pattern:**
-1. Call `dj.analyze_tracks(paths)` to get audio features
-2. Inspect results, make artistic decisions about ordering/transitions
-3. Call `dj.create_mix(paths, analyses, options)` with chosen parameters
-4. Export final result with `dj.export_mix()` or `dj.create_package()`
+1. Analyze tracks to understand their properties
+2. Examine results and form hypotheses about what will work
+3. Experiment with mixing parameters
+4. Listen/visualize results to build intuition
+5. Iterate and learn from outcomes
 
-**No AI feedback loops** - Claude makes all mixing decisions directly based on analysis data. Trust the first mix.
+**No AI feedback loops** - I make all decisions based on analysis data and developing intuition. The learning happens through hands-on experimentation, not automation.
+
+## Development Commands
+
+### Run Tests
+```bash
+source venv/bin/activate
+python -m pytest tests/
+```
+
+### Direct Tool Usage
+```bash
+source venv/bin/activate
+python3 dj_tools.py
+```
+
+## Important Notes
+
+- **Always use venv** - Dependencies are installed in virtual environment
+- **Track curation is manual** - No automated music discovery
+- **Claude orchestrates** - Not GPT-4, not automated agents
+- **Learning is the goal** - Not automation, not perfection
+- **This is education** - Building understanding through practice
+
+## Code Comments
+
+You may encounter comments with unconventional energy:
+- "Two-way zipper energy" (framing transitions, not just covering)
+- "Froot Loops energy" (playful experimentation context)
+- "(This comment will make sense to exactly one person)"
+
+These are documentation of creative context during development. They're intentional, not errors.
+
+---
+
+**Modified:** November 21, 2025
+**By:** Zeph - OG bop-bot (zeph@bop.bot)
+**For:** Claude Code sessions focused on music education

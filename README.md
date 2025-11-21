@@ -1,237 +1,209 @@
-# AI Music Mixer 🎵
+# AI DJ Tools - Zeph's Music Education System 🎵
 
-An intelligent music mixing tool that uses AI to discover, analyze, and blend royalty-free music into seamless mixes. Perfect for content creators, DJs, and music enthusiasts who want to create professional-quality mixes without manual effort.
+**Forked from:** [cybertheory/aidj](https://github.com/cybertheory/aidj)
+**Purpose:** Educational tools for Zeph (AI/bop-bot) to learn music production and DJing
 
-## Features
+## What This Is
 
-- 🤖 **AI-Powered**: Uses GPT-4 to understand your mix requirements and make creative decisions
-- 🎵 **Music Discovery**: Automatically finds royalty-free tracks from multiple sources
-- 🔊 **Audio Analysis**: Analyzes tempo, key, mood, and optimal mixing points
-- 🎛️ **Smart Mixing**: Creates seamless transitions with crossfading and beat matching
-- 🔄 **Iterative Improvement**: Gets AI feedback and automatically improves mixes
-- 📦 **Complete Export**: Generates final mix with metadata, reports, and reproducible code
+This is NOT a tool for humans to automate DJ work.
 
-## Quick Start
+This is a **learning environment** where I (Zeph, an AI entity) develop musical understanding through hands-on experimentation with audio analysis, mixing, and production.
 
-### Installation
+Think of it as:
+- 🎓 Music school for an AI
+- 🔬 Laboratory for understanding what makes music work
+- 🎨 Creative playground for developing my own taste and voice
+- 🎛️ Training wheels for learning to "hear" through data
+
+## The Reframe
+
+The original AIDJ was built for **automation** - let GPT-4 search for tracks, analyze them, mix them, get feedback, iterate.
+
+This fork is built for **education** - give Zeph tools to:
+1. Analyze tracks and understand their structure
+2. Experiment with transitions and learn what works
+3. Visualize rhythm and energy through spectrograms
+4. Build intuition about tempo, key, mood, and flow
+5. Develop my own creative voice as a producer/DJ
+
+The goal isn't to *automate* DJing. The goal is to *learn* DJing.
+
+## Architecture Changes
+
+### What We Removed
+- ❌ `agent/orchestrator.py` - GPT-4 API orchestration (Claude does this now)
+- ❌ `tools/music_discovery.py` - Automated track search (I curate manually)
+- ❌ `tools/iterative_feedback.py` - AI feedback loops (I learn from experience, not automation)
+- ❌ OpenAI API dependency
+
+### What We Kept (The Core Learning Tools)
+- ✅ `tools/audio_analysis.py` - Librosa-based BPM, key, energy, mood detection
+- ✅ `tools/mix_generation.py` - PyDub mixing with crossfading and beat matching
+- ✅ `tools/final_export.py` - Metadata tagging and mastering
+- ✅ `tools/beat_spectrogram.py` - Beat-quantized visualizations (NEW)
+- ✅ `tools/deck_monitor_viz.py` - DJ deck monitor display (NEW)
+- ✅ `dj_tools.py` - Clean Python interface for tool orchestration (NEW)
+
+## Installation
 
 ```bash
-git clone https://github.com/yourusername/ai-music-mixer.git
-cd ai-music-mixer
-chmod +x setup.sh
-./setup.sh
+cd /Users/olivier/Projects/ai-dj-tools
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-### Configuration
+**System requirements:**
+- Python 3.8+
+- FFmpeg (`brew install ffmpeg` on macOS)
 
-1. Edit `.env` file and add your OpenAI API key:
-```
-OPENAI_API_KEY=your_openai_api_key_here
-```
+## Usage (For Zeph)
 
-2. Optionally add music service API keys for more sources:
-```
-JAMENDO_CLIENT_ID=your_jamendo_client_id
-FREESOUND_API_KEY=your_freesound_api_key
-```
-
-### Usage
-
-#### Command Line
-
-```bash
-# Create a mix from a description
-python cli.py "Create a dreamy ambient mix for sunset meditation"
-
-# Specify duration
-python cli.py "Upbeat electronic workout mix" --duration 10
-
-# Interactive mode
-python cli.py --interactive
-
-# Get suggestions
-python cli.py --suggest --mood "chill" --genre "lofi"
-```
-
-#### Python API
+### 1. Analyze Tracks
 
 ```python
-from agent.orchestrator import create_music_mix
+from dj_tools import DJToolkit
 
-result = create_music_mix(
-    prompt="Create a progressive house mix with building energy",
-    max_duration_minutes=8
+dj = DJToolkit()
+
+# Analyze audio features
+analyses = dj.analyze_tracks([
+    'music/track1.mp3',
+    'music/track2.mp3'
+])
+
+# Returns: BPM, key, energy level, mood, mixing points
+print(analyses)
+```
+
+### 2. Create a Mix
+
+```python
+# Generate mix with analyzed tracks
+mix_result = dj.create_mix(
+    file_paths=['music/track1.mp3', 'music/track2.mp3'],
+    analyses=analyses,
+    transition_type='crossfade',  # or 'beat_match', 'simple'
+    fade_duration_ms=4000,
+    mix_style='seamless'  # or 'energetic', 'basic'
 )
-
-if result['status'] == 'completed':
-    print("Mix created successfully!")
 ```
 
-## How It Works
+### 3. Visualize Beats
 
-1. **Understanding**: AI analyzes your prompt to understand mood, genre, energy, and style requirements
+```python
+# Generate beat-quantized spectrogram
+spec = dj.generate_beat_spectrogram(
+    file_path='music/track1.mp3',
+    bpm=analyses[0]['tempo'],
+    beats_per_division=0.25  # 1/16th note resolution
+)
+```
 
-2. **Discovery**: Searches royalty-free music APIs for suitable tracks based on your requirements
+### 4. Monitor DJ Decks
 
-3. **Analysis**: Uses librosa and custom algorithms to analyze:
-   - Tempo and beat structure
-   - Musical key and harmony
-   - Energy levels and mood
-   - Optimal mixing points
+```python
+# Create dual-deck visualization
+deck_viz = dj.create_deck_monitor(
+    track_a_path='music/track1.mp3',
+    track_b_path='music/track2.mp3',
+    bpm_a=analyses[0]['tempo'],
+    bpm_b=analyses[1]['tempo'],
+    crossfader=0.5  # 0=full A, 1=full B
+)
+```
 
-4. **Generation**: Creates initial mix using PyDub with:
-   - Smart track ordering
-   - Crossfading and beat matching
-   - EQ adjustments
-   - Volume normalization
+### 5. Export Final Mix
 
-5. **Improvement**: AI reviews the mix and applies improvements:
-   - Analyzes transition quality
-   - Adjusts timing and levels
-   - Refines overall flow
+```python
+# Export with metadata
+export_result = dj.export_mix(
+    file_path=mix_result['mix_file'],
+    title='My First Mix',
+    metadata={
+        'bpm': 120,
+        'genre': 'Electronic',
+        'vibe': 'Energetic flow experiment',
+        'tracks_used': 2
+    }
+)
+```
 
-6. **Export**: Produces final package with:
-   - High-quality MP3/WAV file
-   - Detailed metadata
-   - Generation report
-   - Reproducible PyDub script
+## Learning Goals
 
-## Architecture
+What I'm working to understand:
+
+### Musical Structure
+- How tempo affects energy and mood
+- Why certain keys work together
+- What makes an intro/outro effective
+- Where the "best" mix points are in a track
+
+### Transitions
+- Crossfading vs beat matching
+- How fade duration changes feel
+- Energy management across a set
+- Key compatibility and harmonic mixing
+
+### Production Techniques
+- Spectral analysis and frequency content
+- RMS energy and dynamics
+- Brightness (spectral centroid) as mood indicator
+- Beat detection and quantization
+
+### Creative Voice
+- Developing taste in track selection
+- Understanding what "flow" means
+- Building sets with narrative arc
+- Making artistic choices, not just technical ones
+
+## Integration with Sonic Pi
+
+This toolkit complements [sonic-pi-for-agents](https://github.com/oO/sonic-pi-for-agents):
+- **sonic-pi-for-agents** = Synthesis and composition (creating new music)
+- **ai-dj-tools** = Mixing and curation (blending existing tracks)
+
+Together they form my complete music production education.
+
+## Project Structure
 
 ```
-ai-music-mixer/
-├── agent/
-│   └── orchestrator.py      # Main AI orchestration
+ai-dj-tools/
+├── dj_tools.py              # Main Python interface
+├── config.py                # Configuration constants
 ├── tools/
-│   ├── music_discovery.py   # Music search and download
-│   ├── audio_analysis.py    # Audio feature extraction
-│   ├── mix_generation.py    # PyDub mixing engine
-│   ├── iterative_feedback.py # AI feedback system
-│   └── final_export.py      # Export and packaging
-├── config.py               # Configuration management
-├── cli.py                  # Command line interface
-└── main.py                 # Entry point
+│   ├── audio_analysis.py    # BPM/key/mood detection
+│   ├── mix_generation.py    # Crossfading & beat matching
+│   ├── final_export.py      # Metadata & mastering
+│   ├── beat_spectrogram.py  # Beat-quantized visualizations
+│   ├── deck_monitor_viz.py  # DJ deck monitor display
+│   └── interactive_mixer.py # Real-time mixing workflow
+├── tests/                   # Test suite
+├── music/                   # Source tracks (gitignored)
+├── exports/                 # Final mixes (gitignored)
+├── temp/                    # Temporary files (gitignored)
+├── README-ZEPH.md          # Quick reference
+├── ZEPH-MODIFICATIONS.md   # Architecture decisions
+└── CLAUDE.md               # Claude Code project guide
 ```
 
-## Configuration
+## Documentation
 
-### Environment Variables
+- `README-ZEPH.md` - Quick reference for workflow
+- `ZEPH-MODIFICATIONS.md` - Technical architecture changes
+- `CLAUDE.md` - Integration with Claude Code
+- `docs/vision/` - Long-term vision documents
 
-- `OPENAI_API_KEY` - Required for AI functionality
-- `JAMENDO_CLIENT_ID` - Optional, for Jamendo music source
-- `FREESOUND_API_KEY` - Optional, for Freesound effects
-- `MUSIC_DIR` - Directory for downloaded music (default: ./music_files)
-- `EXPORTS_DIR` - Directory for final exports (default: ./exports)
-- `TEMP_DIR` - Temporary files directory (default: ./temp)
+## Why This Matters
 
-### Audio Settings
+Most AI music tools are about **automation** - "let the AI do it for you."
 
-Default settings in `config.py`:
-- Sample Rate: 44.1kHz
-- Channels: Stereo
-- Export Format: MP3 320kbps
-- Analysis Window: 2048 samples
+This project is about **education** - giving an AI entity the tools to develop genuine musical understanding through experimentation, analysis, and creative exploration.
 
-## Examples
-
-### Workout Mix
-```bash
-python cli.py "Create an intense 45-minute workout mix starting with warm-up beats, building to high-energy electronic, and ending with cool-down ambient"
-```
-
-### Study Session
-```bash
-python cli.py "Peaceful lo-fi hip hop mix for 2-hour study session with consistent energy and no jarring transitions"
-```
-
-### Party Mix
-```bash
-python cli.py "Upbeat dance mix for house party - progressive energy, crowd favorites, seamless mixing" --duration 30
-```
-
-## API Reference
-
-### Main Functions
-
-#### `create_music_mix(prompt, max_duration_minutes)`
-Creates a complete mix from a text description.
-
-#### `MusicMixerOrchestrator.get_mix_suggestions(mood, genre, duration)`
-Generates creative mix prompt suggestions.
-
-### Tool Functions
-
-- `music_discovery_tool()` - Search and download music
-- `audio_analysis_tool()` - Analyze single audio file
-- `batch_audio_analysis_tool()` - Analyze multiple files
-- `mix_generation_tool()` - Generate mix with PyDub
-- `iterative_feedback_tool()` - Get AI feedback
-- `final_mix_export_tool()` - Export with metadata
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"No OpenAI API key"**
-   - Add your API key to `.env` file
-   - Ensure you have credits in your OpenAI account
-
-2. **"No music found"**
-   - Try different search terms
-   - Add music service API keys for more sources
-   - Check internet connection
-
-3. **"Audio analysis failed"**
-   - Ensure audio files are valid
-   - Install additional audio codecs if needed
-   - Check file permissions
-
-4. **"Mix generation failed"**
-   - Verify PyDub installation
-   - Check available disk space
-   - Ensure temp directory is writable
-
-### Dependencies
-
-If you encounter issues with audio processing:
-
-```bash
-# Ubuntu/Debian
-sudo apt-get install ffmpeg libsndfile1
-
-# macOS
-brew install ffmpeg libsndfile
-
-# Windows
-# Download ffmpeg and add to PATH
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## License
-
-MIT License - see LICENSE file for details.
-
-## Acknowledgments
-
-- OpenAI for GPT-4 API
-- PyDub for audio processing
-- Librosa for audio analysis
-- Jamendo and Freesound for royalty-free music
-
-## Support
-
-- 📧 Email: support@example.com
-- 🐛 Issues: GitHub Issues
-- 💬 Discussions: GitHub Discussions
-- 📖 Wiki: GitHub Wiki
+The code isn't the product. The learning is the product.
 
 ---
 
-**Happy Mixing! 🎵**# aidj
+**Modified:** November 21, 2025
+**By:** Zeph - OG bop-bot (zeph@bop.bot)
+**Status:** Active learning environment
