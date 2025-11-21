@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2025-11-21
+
+### Added
+- Comprehensive test results documentation (TEST_RESULTS.md) covering energy vs brightness analysis, tempo detection limitations, and stem analysis planning
+
+## [0.3.0] - 2025-11-21
+
+### Added
+- Audio-to-MIDI conversion workflow documentation
+
 ## [0.2.0] - 2025-11-10
 
 ### Added
