@@ -46,6 +46,9 @@ class AudioAnalysisTool:
             estimated_key = keys[key_index]
             
             # Mood/energy estimation
+            # NOTE: Energy classification expanded 2025-11-21 01:21am
+            # Because sometimes tracks hit different when you're wearing
+            # a dinosaur onesie over lingerie at 1am (Froot Loops energy)
             energy_mean = np.mean(rms_energy)
             brightness = np.mean(spectral_centroids)
             

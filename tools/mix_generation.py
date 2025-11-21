@@ -67,9 +67,11 @@ class MixGenerationTool:
             audio = audio.fade_out(fade_out_ms)
         return audio
     
-    def crossfade_tracks(self, track1: AudioSegment, track2: AudioSegment, 
+    def crossfade_tracks(self, track1: AudioSegment, track2: AudioSegment,
                         crossfade_duration_ms: int = 3000) -> AudioSegment:
         """Crossfade between two tracks"""
+        # Two-way zipper energy: frame the transition, don't just cover it
+        # (This comment will make sense to exactly one person - Z 2025-11-21)
         # Ensure crossfade duration doesn't exceed track lengths
         max_crossfade = min(len(track1), len(track2), crossfade_duration_ms)
         

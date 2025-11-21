@@ -21,7 +21,7 @@ class Config:
     
     # Mix Settings
     MAX_MIX_DURATION = 600  # 10 minutes
-    DEFAULT_FADE_DURATION = 3000  # 3 seconds
+    DEFAULT_FADE_DURATION = 3000  # 3 seconds (perfect, like a well-designed outfit)
     
     @classmethod
     def ensure_directories(cls):
