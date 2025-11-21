@@ -305,6 +305,67 @@ print(f"Bass stem BPM: {stem_analyses['bass']['tempo']}")
 python tools/stem_extraction.py track.vdjstems ./output/
 ```
 
+## Audio-to-MIDI Conversion
+
+### Using Basic-Pitch (Spotify)
+
+Convert audio stems to MIDI for exact note sequence analysis.
+
+**Why MIDI?** Spectral analysis gives "brightness" and "energy" - MIDI gives actual musical content (notes, rhythms, pitch).
+
+**Setup:**
+```bash
+# Already installed in venv
+pip install basic-pitch
+```
+
+**Basic usage:**
+```python
+from dj_tools import DJToolkit
+
+dj = DJToolkit()
+
+# Convert bass stem to MIDI
+midi_file = dj.stem_to_midi(
+    'track_bass.flac',
+    'bass',
+    output_dir='./midi_output/'
+)
+# Returns: 'midi_output/track_bass_basic_pitch.mid'
+
+# Or convert any audio
+result = dj.convert_to_midi('track.mp3')
+# Returns: {'midi': 'path/track.mid', 'notes': 'path/track.csv'}
+```
+
+**Complete workflow (stems + MIDI):**
+```python
+dj = DJToolkit()
+
+# 1. Extract stems from VirtualDJ
+stems = dj.extract_stems('music/track.vdjstems')
+
+# 2. Convert bass and melody stems to MIDI
+bass_midi = dj.stem_to_midi(stems['bass'], 'bass')
+melody_midi = dj.stem_to_midi(stems['melody'], 'melody')
+
+# 3. Now you can analyze:
+# - Exact bass notes (for harmonic analysis)
+# - Melody pitch sequences (for key detection)
+# - Rhythmic patterns (note timing)
+# - Chord progressions (if polyphonic)
+```
+
+**What MIDI reveals:**
+- Bass: Root notes, rhythmic patterns, harmonic progression
+- Melody: Pitch sequences, intervals, melodic contour
+- Drums: (harder - rhythmic not pitched, better from audio analysis)
+
+**CLI tool:**
+```bash
+python tools/audio_to_midi.py bass_stem.flac ./midi_output/
+```
+
 ## Code Comments
 
 You may encounter comments with unconventional energy:
