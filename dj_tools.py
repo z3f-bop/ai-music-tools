@@ -13,6 +13,7 @@ from tools.mix_generation import mix_generation_tool
 from tools.final_export import final_mix_export_tool, create_mix_package_tool
 from tools.beat_spectrogram import beat_spectrogram_tool
 from tools.deck_monitor_viz import create_deck_monitor_visualization
+from tools.stem_extraction import StemExtractor
 from config import Config
 
 
@@ -24,6 +25,7 @@ class DJToolkit:
 
     def __init__(self):
         Config.ensure_directories()
+        self.stem_extractor = StemExtractor()
 
     def analyze_tracks(self, file_paths: List[str]) -> Dict:
         """
@@ -180,6 +182,47 @@ class DJToolkit:
             playhead_a_seconds=playhead_a_seconds,
             playhead_b_seconds=playhead_b_seconds,
             output_path=output_path
+        )
+
+    def extract_stems(
+        self,
+        vdjstems_path: str,
+        output_dir: Optional[str] = None
+    ) -> Dict[str, str]:
+        """
+        Extract individual stems from a VirtualDJ .vdjstems file.
+
+        Args:
+            vdjstems_path: Path to .vdjstems file
+            output_dir: Output directory (default: auto-generated)
+
+        Returns:
+            Dict mapping stem names to extracted file paths
+            {'vocals': 'path/vocals.flac', 'drums': 'path/drums.flac', ...}
+        """
+        return self.stem_extractor.extract_stems(vdjstems_path, output_dir)
+
+    def extract_single_stem(
+        self,
+        vdjstems_path: str,
+        stem_name: str,
+        output_path: Optional[str] = None
+    ) -> str:
+        """
+        Extract a single stem from a .vdjstems file.
+
+        Args:
+            vdjstems_path: Path to .vdjstems file
+            stem_name: Stem to extract (vocals, hihat, bass, melody, drums)
+            output_path: Optional output file path
+
+        Returns:
+            Path to extracted stem file
+        """
+        return self.stem_extractor.extract_single_stem(
+            vdjstems_path,
+            stem_name,
+            output_path
         )
 
 
