@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-11-23
+
+### Added
+- WhisperX voice analysis documentation for vocal delivery pattern extraction
+- Prosody analysis tool (Python) for pitch, intensity, speaking rate, and pause detection
+- Audio preprocessing documentation directory with pipeline guides and research reports
+
 ## [0.3.2] - 2025-11-21
 
 ### Added
