@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2025-11-24
+
+### Added
+- Transcript formatting tool (`format_transcript.py`) for emotional prosody capture from WhisperX JSON
+- Pause-based punctuation to preserve speech rhythm and emotional processing moments
+- Simple speaker detection using content clues and alternation patterns
+- Experimental diarization tool (`transcript_with_speakers.py`) for future speaker identification work
+
 ## [0.4.0] - 2025-11-23
 
 ### Added
