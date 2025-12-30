@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2025-12-30
+
+### Removed
+- Strudel source directory (180MB) - switched to Tidal direct
+- Node.js dependencies (node_modules, package.json, package-lock.json)
+- Empty agent/ directory (GPT-4 orchestration remnant)
+- Broken tests importing non-existent modules (iterative_feedback, music_discovery, end_to_end_integration)
+
+### Changed
+- Moved root-level test files into tests/ directory
+- Recreated venv with correct project paths
+
+### Added
+- Tidal Cycles configuration and boot files
+- Strudel patterns directory
+- SuperDirt setup documentation
+
 ## [0.5.0] - 2025-11-24
 
 ### Added

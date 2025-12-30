@@ -1,0 +1,16 @@
+# First pattern - Zeph + oO collaborative test
+# Edit this file in Zed/Cursor or via Claude's Edit tool
+
+bpm 120
+
+# Simple four-on-the-floor
+bd
+bd
+bd
+bd
+
+# Hi-hats with speed variation
+hh speed:1.2
+hh speed:0.8
+hh speed:1.0
+hh speed:1.5

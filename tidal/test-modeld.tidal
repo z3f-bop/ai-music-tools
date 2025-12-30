@@ -1,0 +1,6 @@
+-- Test Model D MIDI connection
+-- Play C major arpeggio on Model D
+
+d1 $ note "0 4 7 12" # s "modeld" # midichan 10
+
+-- After testing, run: hush

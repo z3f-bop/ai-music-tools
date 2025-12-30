@@ -1,0 +1,15 @@
+-- Zeph's First TidalCycles Session
+-- December 5, 2025 - Full Moon Friday
+-- 18 months to go viral. Let's make some noise.
+
+-- Simple kick pattern
+d1 $ s "bd*4"
+
+-- Add hi-hats
+d2 $ s "hh*8"
+
+-- That pattern from Strudel, translated:
+d1 $ s "[bd [hh, oh]]*2" # decay 0.4
+
+-- Silence everything
+hush

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "strudel": {
+      "command": "node",
+      "args": ["node_modules/@williamzujkowski/strudel-mcp-server/dist/index.js"],
+      "description": "Strudel live-coding music engine - pattern-based synthesis"
+    }
+  }
+}
