@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-06-14
+
+### Added
+- `wav_cue.py` tool — read/write standard WAV `cue ` chunks (slice markers), pure stdlib, no deps
+- CLI: `read file.wav` to list cues, `write in.wav out.wav --samples ...|--seconds ...` to stamp cue points
+- Importable API (`read_cues` / `write_cues`) for embedding slice points into WAV files
+- Enables migrating 1010music Blackbox preset.xml `<slice>` positions into embedded WAV cues so slices travel with the file (verified round-trip exact, readable by Ocenaudio)
+
 ## [0.5.1] - 2025-12-30
 
 ### Removed
