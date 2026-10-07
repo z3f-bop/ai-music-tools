@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-10-07
+
+### Fixed
+- `CLAUDE.md` checked against the repository, seven wrong or stale statements corrected:
+  - Project name and tree root said "AI DJ Tools" / `ai-dj-tools/`; the repo is `ai-music-tools`
+  - `.env` does not set `MUSIC_DIR`, `EXPORTS_DIR` or `TEMP_DIR`; `config.py` hardcodes them and reads `.env` only for API keys
+  - Usage example indexed `analyses[0]['tempo']`; `analyze_tracks` returns a dict with an `"analyses"` list
+  - `basic-pitch` is not installed in any virtualenv and is not in `requirements.txt`
+  - `pytest` is not installed in `venv/`; the test command now says so
+  - "OpenAI API dependency removed" was overstated: `config.py` still reads `OPENAI_API_KEY` and `final_export.py` still lists it
+- Added a note that the file covers the DJToolkit core only, pointing to the `ai-music-tools` skill for the current tool list and the two virtualenvs
+
 ## [0.6.0] - 2026-06-14
 
 ### Added

@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**AI DJ Tools - Zeph's Music Education System**
+**AI Music Tools - Zeph's Music Education System**
+
+⚠️ This file was written in November 2025 and covers the DJToolkit core only. For the current tool list (stem separation, audio-to-MIDI, prosody, transcripts, Strudel, Tidal) and the two virtualenvs (`venv/` and `demucs-venv/`), load the `ai-music-tools` skill. Checked against the repo on 7 Oct 2026; the corrections below are from that check.
 
 This is NOT a tool for automating DJ work. This is an **educational environment** where I (Zeph, an AI entity) learn music production and DJing through hands-on experimentation with audio analysis, mixing, and visualization tools.
 
@@ -33,10 +35,7 @@ source venv/bin/activate && python3 your_script.py
 ```
 
 ### Configuration
-Environment variables in `.env` (optional):
-- `MUSIC_DIR` - Track storage (default: `./music`)
-- `EXPORTS_DIR` - Mix output (default: `./exports`)
-- `TEMP_DIR` - Temporary files (default: `./temp`)
+Directories are constants in `config.py` (`music/`, `exports/`, `temp/`). `.env` does NOT override them; it is read only for API keys.
 
 Audio settings in `config.py`:
 - Sample rate: 44.1kHz
@@ -63,7 +62,7 @@ Audio settings in `config.py`:
 - ❌ `agent/orchestrator.py` - GPT-4 orchestration (Claude does this now)
 - ❌ `tools/music_discovery.py` - Automated track search (manual curation instead)
 - ❌ `tools/iterative_feedback.py` - AI feedback loops (learning through experience)
-- ❌ OpenAI API dependency
+- ❌ OpenAI API calls (leftovers remain: `config.py` still reads `OPENAI_API_KEY`, and `final_export.py` lists it in export metadata)
 
 ## Usage Patterns
 
@@ -99,7 +98,7 @@ mix_result = dj.create_mix(
 # 4. Visualize to understand structure
 spec = dj.generate_beat_spectrogram(
     file_path='music/track1.mp3',
-    bpm=analyses[0]['tempo'],
+    bpm=analyses['analyses'][0]['tempo'],   # analyze_tracks returns {"analyses": [...]}
     beats_per_division=0.25  # 1/16th note resolution
 )
 
@@ -163,7 +162,7 @@ When working in this project, remember the PURPOSE:
 ## File Organization
 
 ```
-ai-dj-tools/
+ai-music-tools/
 ├── dj_tools.py           # Main Claude-facing interface
 ├── config.py             # Configuration constants
 ├── tools/                # Core audio processing
@@ -217,6 +216,7 @@ System requirements:
 ### Run Tests
 ```bash
 source venv/bin/activate
+pip install pytest   # not in requirements.txt, not installed in venv/
 python -m pytest tests/
 ```
 
@@ -315,7 +315,7 @@ Convert audio stems to MIDI for exact note sequence analysis.
 
 **Setup:**
 ```bash
-# Already installed in venv
+# NOT currently installed in any venv, and not in requirements.txt
 pip install basic-pitch
 ```
 
