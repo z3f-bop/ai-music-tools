@@ -62,7 +62,7 @@ Audio settings in `config.py`:
 - ❌ `agent/orchestrator.py` - GPT-4 orchestration (Claude does this now)
 - ❌ `tools/music_discovery.py` - Automated track search (manual curation instead)
 - ❌ `tools/iterative_feedback.py` - AI feedback loops (learning through experience)
-- ❌ OpenAI API calls (`config.py` still reads `OPENAI_API_KEY`; unused)
+- ❌ OpenAI API calls (but `cli.py` still treats `OPENAI_API_KEY` as required at setup)
 
 ## Usage Patterns
 
