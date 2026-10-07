@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-10-07
+
+### Changed
+- `CLAUDE.md` trimmed for context: the note at the top loses its dates and its "checked on" sentence, and the OpenAI bullet is shortened
+
 ## [0.6.1] - 2026-10-07
 
 ### Fixed

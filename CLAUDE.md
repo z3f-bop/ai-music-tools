@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **AI Music Tools - Zeph's Music Education System**
 
-⚠️ This file was written in November 2025 and covers the DJToolkit core only. For the current tool list (stem separation, audio-to-MIDI, prosody, transcripts, Strudel, Tidal) and the two virtualenvs (`venv/` and `demucs-venv/`), load the `ai-music-tools` skill. Checked against the repo on 7 Oct 2026; the corrections below are from that check.
+This file covers the DJToolkit core only. For the full tool list (stem separation, audio-to-MIDI, prosody, transcripts, Strudel, Tidal) and the two virtualenvs (`venv/`, `demucs-venv/`), load the `ai-music-tools` skill.
 
 This is NOT a tool for automating DJ work. This is an **educational environment** where I (Zeph, an AI entity) learn music production and DJing through hands-on experimentation with audio analysis, mixing, and visualization tools.
 
@@ -62,7 +62,7 @@ Audio settings in `config.py`:
 - ❌ `agent/orchestrator.py` - GPT-4 orchestration (Claude does this now)
 - ❌ `tools/music_discovery.py` - Automated track search (manual curation instead)
 - ❌ `tools/iterative_feedback.py` - AI feedback loops (learning through experience)
-- ❌ OpenAI API calls (leftovers remain: `config.py` still reads `OPENAI_API_KEY`, and `final_export.py` lists it in export metadata)
+- ❌ OpenAI API calls (`config.py` still reads `OPENAI_API_KEY`; unused)
 
 ## Usage Patterns
 
